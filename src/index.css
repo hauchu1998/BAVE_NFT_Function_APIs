@@ -1,0 +1,26 @@
+@import url("https://use.typekit.net/phh6dgc.css");
+body {
+  margin: 0;
+  font-family: 'elevon','adobe-fan-heiti-std', sans-serif;
+  font-size: normal;
+  font-weight: 300;
+  color: rgb(219, 255, 248);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+*{
+  position: relative;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* .text-content {
+  @apply text-[20px];
+} */
