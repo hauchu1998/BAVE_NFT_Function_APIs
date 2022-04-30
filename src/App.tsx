@@ -5,12 +5,8 @@ import axios from 'axios';
 import Header from './components/Header';
 import NFT from './components/NFT';
 
-axios.get('/api/api/get_token')
-.then((res) => console.log(res))
-.catch((err) => console.log(err))
-
 function App() {
-  
+
   return (
     <div className="App">
       {/* <ul className='list'>
