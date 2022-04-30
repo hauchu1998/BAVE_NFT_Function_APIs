@@ -1,19 +1,23 @@
 import { defaults } from 'autoprefixer';
 import React, {useState, useEffect} from 'react'
 
-export default function CountDown(props) {
+interface CountDownProps {
+    deadline: string;
+}
+
+export default function CountDown(props: CountDownProps) {
     const [day, setDay] = useState(0);
     const [hour, setHour] = useState(0);
     const [minute, setMinute] = useState(0);
     const [second, setSecond] = useState(0);
     const deadline = props.deadline;
 
-    const leadingZero = (num) => {
+    const leadingZero = (num: number) => {
         return num < 10? "0"+num : num; 
     }
 
-    const getTimeInterval = (deadline) => {
-        let timeInterval = Date.parse(deadline) - Date.parse(new Date());
+    const getTimeInterval = (deadline: string) => {
+        let timeInterval = Date.parse(deadline) - Date.parse(new Date().toString());
 
         if (timeInterval < 0) {
             setDay(0);
@@ -35,11 +39,11 @@ export default function CountDown(props) {
 
     return (
         <div className="w-full flex flex-col items-center">
-            <div className='w-1/2 flex justify-center space-x-2 md:space-x-5 h-[8vh] lg:h-[12vh] md:h-[10vh] mt-5'>
-                <div className='rounded-lg opacity-50 shadow-2xl  w-1/4 text-center text-2xl'><p id='day' >{leadingZero(day)} DAYs</p></div>
-                <div className='rounded-lg opacity-50 shadow-2xl  w-1/4 text-center text-2xl'><p id='hour'>{leadingZero(hour)} HRs</p></div>
-                <div className='rounded-lg opacity-50 shadow-2xl  w-1/4 text-center text-2xl'><p id='minute'>{leadingZero(minute)} MINs</p></div>
-                <div className='rounded-lg opacity-50 shadow-2xl  w-1/4 text-center text-2xl'><p id='second'>{leadingZero(second)} SECs</p></div>
+            <div className='w-1/2 text-black flex justify-center space-x-2 md:space-x-5 h-[8vh] lg:h-[12vh] md:h-[10vh] mt-5'>
+                <div className='rounded-lg shadow-2xl  w-1/4 text-center text-2xl'><p id='day' >{leadingZero(day)} DAYs</p></div>
+                <div className='rounded-lg shadow-2xl  w-1/4 text-center text-2xl'><p id='hour'>{leadingZero(hour)} HRs</p></div>
+                <div className='rounded-lg shadow-2xl  w-1/4 text-center text-2xl'><p id='minute'>{leadingZero(minute)} MINs</p></div>
+                <div className='rounded-lg shadow-2xl  w-1/4 text-center text-2xl'><p id='second'>{leadingZero(second)} SECs</p></div>
             </div>
         </div>
     );

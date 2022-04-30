@@ -1,8 +1,22 @@
+import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react'
 
-function BindAccount(props) {
+interface UserInfo {
+  email: string;
+  confirmEmail: string;
+}
+
+interface BindAccountProps {
+  defaultAccount: string | null;
+  contract: ethers.Contract | null;
+  getBalanceOf: Function;
+  balanceNFT: number;
+  tokens: number[];
+}
+
+function BindAccount(props: BindAccountProps) {
   const [bind, setBind] = useState(false);
-  const [input, setInput] = useState({
+  const [input, setInput] = useState<UserInfo>({
     email: '',
     confirmEmail: ''
   });
@@ -14,8 +28,8 @@ function BindAccount(props) {
   const [submitDisable, setSubmitDisable] = useState(true)
 
 
-  const onInputChange = (e) => {
-    const { name, value } = e.target;
+  const onInputChange = (e: React.ChangeEvent) => {
+    const { name, value } = e.target as HTMLInputElement;
     setInput(prev => ({
       ...prev,
       [name]: value
@@ -23,8 +37,8 @@ function BindAccount(props) {
     validateInput(e);
   }
  
-  const validateInput = (e) => {
-    let { name, value } = e.target;
+  const validateInput = (e: React.ChangeEvent) => {
+    let { name, value } = e.target as HTMLInputElement;
     setError(prev => {
       const stateObj = { ...prev, [name]: "" };
 
@@ -64,7 +78,7 @@ function BindAccount(props) {
   }
 
 
-  function handleSubmit(e) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     // console.log(e.target);
     setBind(false);
@@ -175,7 +189,7 @@ function BindAccount(props) {
   );
   return (
     <div>
-      <button type="button" className='mt-5 p-5 bg-gray-400 text-xl rounded-md text-center' onClick={() => bindAccount(true)}>Bind Account</button>
+      <button type="button" className='mt-5 p-5 bg-gray-400 text-xl rounded-md text-center' onClick={() => bindAccount()}>Bind Account</button>
       {bind ?
         (
           <>

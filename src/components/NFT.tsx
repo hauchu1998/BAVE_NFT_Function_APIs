@@ -10,6 +10,8 @@ import CountDown from './CountDown';
 import BindAccount from './BindAccount';
 import OwnerClaim from './OwnerClaim';
 
+const envVariables = import.meta.env
+
 const networkTable = {
     "0x1": "Ethereum Main Network (Mainnet)",
     "0x3": "Ropsten Test Network",
@@ -19,23 +21,21 @@ const networkTable = {
     "0x13881": "Mumbai Test Network"
 }
 
-function NFT(props) {
-    // const contractAddress = '0xd50640224655aFa48cD094A19c5E0DA50145C2c6';
-    // const network = "0x4";
-    const claimYear = 2022;
-    const contractAddress = "0xc82D68978Fe524Faebf42cc717C4B0F2C8c26d15" // lala電商 contract address
-    const claimAddress = "0x6Ae364B0C6ACaE9D306b538369E21038387f6261" //
-    const network = "0x13881"; // lala電商 Polygon Test Network (Mumbai)
-    const deadline = "2022-05-01 18:00:00";
-    const price = 0.01; // 0.01Eth 10^16Wei
-    const [provider, setProvider] = useState(null);
-    const [signer, setSigner] = useState(null);
-    const [contract, setContract] = useState(null);
-    const [claimContract, setClaimContract] = useState(null);
-    const [balanceNFT, setbalanceNFT] = useState(0);
-    const [defaultAccount, setDefaultAccount] = useState(null);
+function NFT() {
+    const claimYear = envVariables.VITE_CLAIM_YEAR;
+    const contractAddress = envVariables.VITE_CONTRACT_ADDRESS // lala電商 contract address
+    const claimAddress = envVariables.VITE_CLAIM_ADDRESS//
+    const network = envVariables.VITE_NETWORK; // lala電商 Polygon Test Network (Mumbai)
+    const deadline = envVariables.VITE_DEADLINE;
+    const price = envVariables.VITE_PUBLIC_PRICE; // 0.01Eth 10^16Wei
+    const [provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null);
+    const [signer, setSigner] = useState<ethers.providers.JsonRpcSigner | null>(null);
+    const [contract, setContract] = useState<ethers.Contract | null>(null);
+    const [claimContract, setClaimContract] = useState<ethers.Contract | null>(null);
+    const [balanceNFT, setbalanceNFT] = useState<number>(0);
+    const [defaultAccount, setDefaultAccount] = useState<string | null>(null);
     const [quantity, setQuantity] = useState(1);
-    const [tokens, setTokens] = useState([]);
+    const [tokens, setTokens] = useState<any[]>([]);
     const [claimValue, setClaimValue] = useState(undefined);
 
     async function plusQuantity() {
@@ -55,7 +55,7 @@ function NFT(props) {
     //     }
     // }
     
-    const switchWalletNetwork = async (network) => {
+    const switchWalletNetwork = async (network: any) => {
         try{
             await window.ethereum.request({
                 method: 'wallet_switchEthereumChain',
@@ -86,7 +86,7 @@ function NFT(props) {
         }
     }
 
-    const handleAccountChanged = (account) => {
+    const handleAccountChanged = (account: string) => {
         console.log('handle account: ' + account);
         setDefaultAccount(account);
     }
@@ -122,26 +122,31 @@ function NFT(props) {
 
     const getBalanceOf = async () => {
         // console.log('get balance: ' + defaultAccount);
-        var tempTokens = [];
-        let val = await contract.balanceOf(defaultAccount);
+        var tempTokens: any[] = [];
+        if (contract != null && claimContract != null) {
+            let val = await contract.balanceOf(defaultAccount);
         
-        for (let count = 0; count < val.toNumber(); count++) {
-            let tokenId = -1;
-            await contract.tokenOfOwnerByIndex(defaultAccount, count)
-              .then((res) => {
-                tokenId = res.toNumber()
-                
-                // console.log(tempTokens);
-            })
-            console.log(tokenId);
-            await claimContract.Claimed(claimYear, tokenId)
-              .then((claimed) => {
-                  console.log(claimed)
-                  tempTokens = [...tempTokens, {id: tokenId, claimed: claimed}];
-            });
-          }
-        setbalanceNFT(val.toNumber());
-        setTokens(tempTokens);
+            for (let count = 0; count < val.toNumber(); count++) {
+                let tokenId = -1;
+                await contract.tokenOfOwnerByIndex(defaultAccount, count)
+                .then((res: { toNumber: () => number; }) => {
+                    tokenId = res.toNumber()
+                    
+                    // console.log(tempTokens);
+                })
+                console.log(tokenId);
+                await claimContract.Claimed(claimYear, tokenId)
+                .then((claimed: any) => {
+                    console.log(claimed)
+                    tempTokens = [...tempTokens, {id: tokenId, claimed: claimed}];
+                });
+            }
+            setbalanceNFT(val.toNumber());
+            setTokens(tempTokens);
+        } else {
+            alert("please connect wallet");
+        }
+        
     }
 
     return (

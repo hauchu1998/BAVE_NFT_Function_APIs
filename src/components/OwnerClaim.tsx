@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 
+interface OwnerClaimProps {
+    claimContract: ethers.Contract;
+    defaultAccount: string | null;
+    tokens: number[];
+    claimValue: number;
+}
+
 function OwnerClaim(props: any) {
     const [canClaim, setCanClaim] = useState(0);
     const [totalClaim, setTotalClaim] = useState(0);
