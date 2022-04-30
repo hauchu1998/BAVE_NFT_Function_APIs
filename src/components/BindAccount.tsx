@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import { BindAccountApi } from '../AxiosAPIs';
 
 interface UserInfo {
   email: string;
@@ -73,7 +74,12 @@ function BindAccount(props: BindAccountProps) {
   }
 
   const bindAccount = async () => {
-    await props.getBalanceOf();
+    var bindAccountData = {
+      "address": "0xf16e9b0d03470827a95cdfd0cb8a8a3b46969b90",
+      "email": "aaaaaaaaaaaaaaaaa@gmail.com"
+    }
+    BindAccountApi(bindAccountData);
+    // await props.getBalanceOf();
     setBind(true);
   }
 
@@ -95,7 +101,7 @@ function BindAccount(props: BindAccountProps) {
   }, [input, error]);
 
   const ownTemplate = (
-    <>
+    <div>
       {/* <div className='bg-gray-200 justify-center items-center'>
         <p className='text-center font-bold'>擁有</p>
         <ul>
@@ -170,11 +176,11 @@ function BindAccount(props: BindAccountProps) {
         </form>
       </div >
 
-    </>
+    </div>
   );
 
   const noOwnTemplate = (
-    <>
+    <div>
       <p className="my-4 text-slate-500 text-lg leading-relaxed text-left">本帳號無Lalala NFT.</p>
       <div className="flex items-center justify-center p-6 border-t border-solid border-slate-200 rounded-b">
         <button
@@ -185,14 +191,13 @@ function BindAccount(props: BindAccountProps) {
           Close
         </button>
       </div>
-    </>
+    </div>
   );
   return (
     <div>
       <button type="button" className='mt-5 p-5 bg-gray-400 text-xl rounded-md text-center' onClick={() => bindAccount()}>Bind Account</button>
       {bind ?
-        (
-          <>
+          <div>
             <div
               className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
             >
@@ -221,8 +226,7 @@ function BindAccount(props: BindAccountProps) {
               </div>
             </div>
             <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-          </>
-        ) : null}
+          </div>: null}
     </div>
   );
 }

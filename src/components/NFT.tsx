@@ -34,9 +34,9 @@ function NFT() {
     const [claimContract, setClaimContract] = useState<ethers.Contract | null>(null);
     const [balanceNFT, setbalanceNFT] = useState<number>(0);
     const [defaultAccount, setDefaultAccount] = useState<string | null>(null);
-    const [quantity, setQuantity] = useState(1);
+    const [quantity, setQuantity] = useState<number>(1);
     const [tokens, setTokens] = useState<any[]>([]);
-    const [claimValue, setClaimValue] = useState(undefined);
+    const [claimValue, setClaimValue] = useState<number | undefined>(undefined);
 
     async function plusQuantity() {
         let result = quantity + 1;
