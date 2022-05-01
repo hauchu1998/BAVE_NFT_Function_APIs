@@ -6,6 +6,7 @@ interface Window {
 
 interface ImportMetaEnv {
     readonly VITE_CLAIM_YEAR: number;
+    readonly VITE_DAPP_URL: string;
     readonly VITE_CONTRACT_ADDRESS: string;
     readonly VITE_CLAIM_ADDRESS: string;
     readonly VITE_NETWORK: string;

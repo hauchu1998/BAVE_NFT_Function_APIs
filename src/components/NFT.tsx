@@ -33,7 +33,7 @@ function NFT() {
     const [contract, setContract] = useState<ethers.Contract | null>(null);
     const [claimContract, setClaimContract] = useState<ethers.Contract | null>(null);
     const [balanceNFT, setbalanceNFT] = useState<number>(0);
-    const [defaultAccount, setDefaultAccount] = useState<string | null>(null);
+    const [defaultAccount, setDefaultAccount] = useState<string>("");
     const [quantity, setQuantity] = useState<number>(1);
     const [tokens, setTokens] = useState<any[]>([]);
     const [claimValue, setClaimValue] = useState<number | undefined>(undefined);
@@ -169,6 +169,7 @@ function NFT() {
                 price={price}
             />
             <ConnectWallet 
+                defaultAccount={defaultAccount}
                 network={network}
                 networkTable={networkTable}
                 switchWalletNetwork={switchWalletNetwork}
