@@ -9,8 +9,10 @@ import NftQuantity from './NftQuantity';
 import CountDown from './CountDown';
 import BindAccount from './BindAccount';
 import OwnerClaim from './OwnerClaim';
+import GetCoupons from './GetCoupons';
+import { TokensInfo } from '../AxiosAPIs';
 
-const envVariables = import.meta.env
+const envVariables = import.meta.env;
 
 const networkTable = {
     "0x1": "Ethereum Main Network (Mainnet)",
@@ -20,6 +22,7 @@ const networkTable = {
     "0x2a": "Kovan Test Network",
     "0x13881": "Mumbai Test Network"
 }
+
 
 function NFT() {
     const claimYear = envVariables.VITE_CLAIM_YEAR;
@@ -32,10 +35,9 @@ function NFT() {
     const [signer, setSigner] = useState<ethers.providers.JsonRpcSigner | null>(null);
     const [contract, setContract] = useState<ethers.Contract | null>(null);
     const [claimContract, setClaimContract] = useState<ethers.Contract | null>(null);
-    const [balanceNFT, setbalanceNFT] = useState<number>(0);
     const [defaultAccount, setDefaultAccount] = useState<string>("");
     const [quantity, setQuantity] = useState<number>(1);
-    const [tokens, setTokens] = useState<any[]>([]);
+    const [tokens, setTokens] = useState<TokensInfo[]>([]);
     const [claimValue, setClaimValue] = useState<number | undefined>(undefined);
 
     async function plusQuantity() {
@@ -120,29 +122,23 @@ function NFT() {
 
     }
 
-    const getBalanceOf = async () => {
-        // console.log('get balance: ' + defaultAccount);
-        var tempTokens: any[] = [];
+    const getBalanceOf = async (tempTokens: TokensInfo[]) => {
+        console.log('get balance: ' + defaultAccount, tempTokens);
         if (contract != null && claimContract != null) {
-            let val = await contract.balanceOf(defaultAccount);
-        
-            for (let count = 0; count < val.toNumber(); count++) {
-                let tokenId = -1;
-                await contract.tokenOfOwnerByIndex(defaultAccount, count)
-                .then((res: { toNumber: () => number; }) => {
-                    tokenId = res.toNumber()
-                    
-                    // console.log(tempTokens);
-                })
-                console.log(tokenId);
-                await claimContract.Claimed(claimYear, tokenId)
-                .then((claimed: any) => {
-                    console.log(claimed)
-                    tempTokens = [...tempTokens, {id: tokenId, claimed: claimed}];
+            // let val = await contract.balanceOf(defaultAccount);
+            for (let i = 0; i < tempTokens.length; i++) {
+                // await contract.tokenOfOwnerByIndex(defaultAccount, count)
+                // .then((res: { toNumber: () => number; }) => {
+                //     tokenId = res.toNumber()
+                // })
+                await claimContract.Claimed(claimYear, tempTokens[i].tokenId)
+                .then((claimed: boolean) => {
+                    tempTokens[i] = {...tempTokens[i], claimed: claimed};
+                    console.log(tempTokens);
                 });
             }
-            setbalanceNFT(val.toNumber());
             setTokens(tempTokens);
+            console.log('done');
         } else {
             alert("please connect wallet");
         }
@@ -157,7 +153,6 @@ function NFT() {
                 setProvider={setProvider}
                 setSigner={setSigner}
                 setContract={setContract}
-                setbalanceNFT={setbalanceNFT}
                 abi={abi}
                 switchWalletNetwork={switchWalletNetwork}
                 handleAccountChanged={handleAccountChanged}
@@ -187,14 +182,17 @@ function NFT() {
                 defaultAccount={defaultAccount}
                 contract={contract}
                 getBalanceOf={getBalanceOf}
-                balanceNFT={balanceNFT}
+                setTokens={setTokens}
                 tokens={tokens}
             />
             <OwnerClaim
                 claimContract={claimContract}
                 defaultAccount={defaultAccount}
-                tokens={tokens}
+                tokenIds={tokens}
                 claimValue={claimValue}
+            />
+            <GetCoupons
+                defaultAccount={defaultAccount}
             />
         </div>
     );

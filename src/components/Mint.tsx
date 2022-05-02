@@ -8,7 +8,6 @@ interface MintProps {
     setProvider: Function;
     setSigner: Function;
     setContract: Function;
-    setbalanceNFT: Function;
     abi: Object;
     switchWalletNetwork: Function;
     handleAccountChanged: Function;

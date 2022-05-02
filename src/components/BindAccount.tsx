@@ -1,22 +1,33 @@
 import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
-import { BindAccountApi } from '../AxiosAPIs';
+import { bindAccountApi, getTokenIdsApi, TokensInfo } from '../AxiosAPIs';
 
 interface UserInfo {
   email: string;
   confirmEmail: string;
 }
 
+
 interface BindAccountProps {
-  defaultAccount: string | null;
-  contract: ethers.Contract | null;
-  getBalanceOf: Function;
-  balanceNFT: number;
-  tokens: number[];
+  defaultAccount: string | null,
+  contract: ethers.Contract | null,
+  getBalanceOf: Function,
+  setTokens: Function,
+  tokens: TokensInfo[],
 }
+
+var getTokenIdsTestData = {
+  "address": "0xf16e9b0d03470827a95cdfd0cb8a8a3b46969b90",
+}
+
+  var bindAccountTestData = {
+    "address": "0xf16e9b0d03470827a95cdfd0cb8a8a3b46969b90",
+    "email": "aaaaaaaaaaaaaaaaa@gmail.com"
+  }
 
 function BindAccount(props: BindAccountProps) {
   const [bind, setBind] = useState(false);
+  const [submitDisable, setSubmitDisable] = useState(true)
   const [input, setInput] = useState<UserInfo>({
     email: '',
     confirmEmail: ''
@@ -26,8 +37,6 @@ function BindAccount(props: BindAccountProps) {
     email: '',
     confirmEmail: ''
   })
-  const [submitDisable, setSubmitDisable] = useState(true)
-
 
   const onInputChange = (e: React.ChangeEvent) => {
     const { name, value } = e.target as HTMLInputElement;
@@ -74,12 +83,25 @@ function BindAccount(props: BindAccountProps) {
   }
 
   const bindAccount = async () => {
-    var bindAccountData = {
-      "address": "0xf16e9b0d03470827a95cdfd0cb8a8a3b46969b90",
-      "email": "aaaaaaaaaaaaaaaaa@gmail.com"
+    var tempTokenIds: TokensInfo[] = []
+    await getTokenIdsApi(getTokenIdsTestData)
+    .then(res => {
+        if (res.data.op_code == 1) {
+            console.log('成功取得TokenIDs');
+            tempTokenIds = res.data.results;
+            props.setTokens(tempTokenIds);
+            props.getBalanceOf(tempTokenIds);
+        } else {
+            console.log('Token已過期，請重新進入綁定頁面');
+        }
+    })
+    .catch(err => {
+        console.log(err);
+    })
+    
+    if (tempTokenIds.length > 0) {
+      bindAccountApi(bindAccountTestData);
     }
-    BindAccountApi(bindAccountData);
-    // await props.getBalanceOf();
     setBind(true);
   }
 
@@ -195,7 +217,7 @@ function BindAccount(props: BindAccountProps) {
   );
   return (
     <div>
-      <button type="button" className='mt-5 p-5 bg-gray-400 text-xl rounded-md text-center' onClick={() => bindAccount()}>Bind Account</button>
+      <button type="button" className='mt-5 p-5 bg-gray-400 text-xl rounded-md text-center' onClick={() => bindAccount()}>綁定</button>
       {bind ?
           <div>
             <div
@@ -220,7 +242,7 @@ function BindAccount(props: BindAccountProps) {
                   </div>
                   {/*body*/}
                   <div className="relative p-6 flex-auto">
-                    {props.balanceNFT > 0 ? ownTemplate : noOwnTemplate}
+                    {props.tokens.length > 0 ? ownTemplate : noOwnTemplate}
                   </div>
                 </div>
               </div>

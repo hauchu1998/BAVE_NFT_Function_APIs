@@ -1,12 +1,11 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 
 
-export const getServerTokenApi = () => {
+export const getServerTokenApi = async () => {
     axios.get('/api/api/get_token')
     .then((res) => {
-    import.meta.env.VITE_SERVER_TOKEN = res.data.token;
-    axios.defaults.headers.common['Authorization'] = `Bearer ${import.meta.env.VITE_SERVER_TOKEN}`;
+        localStorage.setItem('auth_token', res.data.token);
     })
     .catch((err) => console.log(err))
 }
@@ -17,27 +16,50 @@ interface ApiData {
     token_ids?: number[]
 }
 
-export const AuthTestApi = (data: any) => {
-    axios.post('/api/api/auth_test', data)
+export interface TokensInfo {
+    tokenId: number,
+    guppon?: string,
+    take?: boolean,
+    claimed?: boolean,
+}
+
+interface ResponseData {
+    op_code: number,
+    op_msg: string,
+    results?: TokensInfo[] | undefined;
+}
+
+export const AuthTestApi = async (data: any) => {
+    await axios.post('/api/api/auth_test', data, {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+        }
+    })
     .then(res => console.log('auth test', res.data))
     .catch(err => console.log(err))
 }
 
-export const BindAccountApi = (bindAccountData: ApiData) => {
-    axios.post('/api/api/bind_account', bindAccountData)
-    .then(res => console.log("bind account", res.data))
-    .catch(err => console.log(err))
+export const bindAccountApi = async (bindAccountData: ApiData) => {
+    await axios.post('/api/api/bind_account', bindAccountData, {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+        }
+    })
 }
 
-export const getTokenIdsApi = (getTokenIdsData: ApiData) => {
-    axios.post('/api/api/get_tokenids', getTokenIdsData)
-    .then(res => console.log("get tokenids", res.data))
-    .catch(err => console.log(err))
+export const getTokenIdsApi = async (getTokenIdsData: ApiData) => {
+    return await axios.post('/api/api/get_tokenids', getTokenIdsData, {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+        }
+    })
 }
 
-export const getCouponsApi = (getCouponsData: ApiData) => {
-    axios.post('/api/api/get_coupons', getCouponsData)
-    .then(res => console.log("get coupons", res.data))
-    .catch(err => console.log(err))
+export const getCouponsApi = async (getCouponsData: ApiData) => {
+    return await axios.post('/api/api/get_coupons', getCouponsData, {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+        }
+    })
 }
 

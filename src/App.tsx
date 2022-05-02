@@ -9,12 +9,9 @@ function App() {
 
   return (
     <div className="App">
-      {/* <ul className='list'>
-        <li>One</li>
-        <li>Two</li>
-        <li>Three</li>
-      </ul>
-      <Header /> */}
+      <button className="transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 ...">
+        Save Changes
+      </button>
       <NFT />
     </div>
   );
