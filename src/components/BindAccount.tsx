@@ -90,19 +90,21 @@ function BindAccount(props: BindAccountProps) {
             console.log('成功取得TokenIDs');
             tempTokenIds = res.data.results;
             props.setTokens(tempTokenIds);
-            props.getBalanceOf(tempTokenIds);
         } else {
             console.log('Token已過期，請重新進入綁定頁面');
         }
+      return props.getBalanceOf(tempTokenIds);
+    })
+    .then(() => {
+      if (tempTokenIds.length > 0) {
+        bindAccountApi(bindAccountTestData);
+      }
+      setBind(true);
     })
     .catch(err => {
         console.log(err);
     })
     
-    if (tempTokenIds.length > 0) {
-      bindAccountApi(bindAccountTestData);
-    }
-    setBind(true);
   }
 
 

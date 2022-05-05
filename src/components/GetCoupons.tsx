@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { getCouponsApi, TokensInfo } from '../AxiosAPIs';
 
 interface GetCouponsProps {
-    defaultAccount: string| null;
+    defaultAccount: string| null,
+    tokens: TokensInfo[]
 }
 
 var getCouponsTestData = {
@@ -14,6 +15,18 @@ export default function GetCoupons(props: GetCouponsProps) {
     const [take, setTake] = useState(false);
     const [coupons, setCoupons] = useState<TokensInfo[]>([])
     const [tokenSelection, setTokenSelection] = useState<number[]>([])
+
+    const selectToken = (tokenId: number) => {
+        var tempTokenSelection = []
+        if (tokenSelection.indexOf(tokenId) != -1) {
+            tempTokenSelection = tokenSelection.filter((token: number) => token != tokenId);
+        } else {
+            console.log('not in');
+            tempTokenSelection = [...tokenSelection, tokenId];
+        }
+        console.log(tempTokenSelection);
+        setTokenSelection(tempTokenSelection);
+    }
 
     const getCoupons = async () => {
         if (props.defaultAccount != null) {
@@ -44,6 +57,24 @@ export default function GetCoupons(props: GetCouponsProps) {
     
     return  (
     <div>
+         {props.tokens.length > 0 ?
+                <div className="pt-10 flex justify-center items-center">
+                    <ul className='gap-2 flex text-center'>
+                        {props.tokens.map((token) => {
+                            return <li  key={"token" + token.tokenId} 
+                                        // onClick=
+                                        className="flex item-center"
+                                    >
+                                        <button
+                                            onClick={() => selectToken(token.tokenId)} 
+                                            className={`text-xl w-10 h-10 ${ token.take? "bg-red-200 text-red-500 border-1 border-red-500" : "bg-green-200 text-green-400 border-1 border-green-400"}`}
+                                        >
+                                            {token.tokenId}
+                                        </button>
+                                    </li>
+                        })}
+                    </ul>
+                </div> : null}
         <button type="button" className='mt-5 p-5 bg-gray-400 text-xl rounded-md text-center' onClick={() => getCoupons()}>領取折扣碼</button>
         {take? 
         <div className='bg-gray-200 justify-center items-center'>

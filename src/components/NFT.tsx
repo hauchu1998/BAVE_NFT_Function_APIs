@@ -10,7 +10,7 @@ import CountDown from './CountDown';
 import BindAccount from './BindAccount';
 import OwnerClaim from './OwnerClaim';
 import GetCoupons from './GetCoupons';
-import { TokensInfo } from '../AxiosAPIs';
+import { getServerTokenApi, TokensInfo } from '../AxiosAPIs';
 
 const envVariables = import.meta.env;
 
@@ -22,7 +22,7 @@ const networkTable = {
     "0x2a": "Kovan Test Network",
     "0x13881": "Mumbai Test Network"
 }
-
+getServerTokenApi()
 
 function NFT() {
     const claimYear = envVariables.VITE_CLAIM_YEAR;
@@ -46,8 +46,10 @@ function NFT() {
     }
 
     async function minusQuantity() {
-        let result = quantity - 1;
-        setQuantity(result);
+        if (quantity > 0) {
+            let result = quantity - 1;
+            setQuantity(result);
+        }
     }
 
      // const checkCurrentNetwork = (chainId) => {
@@ -122,27 +124,46 @@ function NFT() {
 
     }
 
+    const checkClaimed = (tokens:TokensInfo[]) => {
+        return new Promise((resolve, reject) => {
+            for (let i = 0; i < tokens.length; i++) {
+                if (claimContract != null) {
+                    claimContract.Claimed(claimYear, tokens[i].tokenId)
+                    .then((claimed: boolean) => {
+                        tokens[i] = {...tokens[i], claimed: claimed};
+                    })
+                    .catch((err: any) => {
+                        return reject(err);
+                    })
+                }
+            }
+            return resolve(tokens);
+        })
+    }
+
     const getBalanceOf = async (tempTokens: TokensInfo[]) => {
         console.log('get balance: ' + defaultAccount, tempTokens);
+        var updateTokens: TokensInfo[] = [];
         if (contract != null && claimContract != null) {
             // let val = await contract.balanceOf(defaultAccount);
-            for (let i = 0; i < tempTokens.length; i++) {
+            // for (let i = 0; i < tempTokens.length; i++) {
                 // await contract.tokenOfOwnerByIndex(defaultAccount, count)
                 // .then((res: { toNumber: () => number; }) => {
                 //     tokenId = res.toNumber()
                 // })
-                await claimContract.Claimed(claimYear, tempTokens[i].tokenId)
-                .then((claimed: boolean) => {
-                    tempTokens[i] = {...tempTokens[i], claimed: claimed};
-                    console.log(tempTokens);
-                });
-            }
-            setTokens(tempTokens);
-            console.log('done');
+            // }
+            checkClaimed(tempTokens)
+            .then((tokens: any) => {
+                console.log(tokens);
+                updateTokens = tokens;
+                setTokens(tokens);
+            })
+            .catch(err => {
+                console.log(err);
+            })
         } else {
             alert("please connect wallet");
         }
-        
     }
 
     return (
@@ -188,11 +209,12 @@ function NFT() {
             <OwnerClaim
                 claimContract={claimContract}
                 defaultAccount={defaultAccount}
-                tokenIds={tokens}
+                tokens={tokens}
                 claimValue={claimValue}
             />
             <GetCoupons
                 defaultAccount={defaultAccount}
+                tokens={tokens}
             />
         </div>
     );

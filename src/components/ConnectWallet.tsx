@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import connecttWalletButton from '../assets/img/collectWallet.png';
+import connectWalletButton from '../assets/img/collectWallet.png';
 
 interface ConnectWalletProps {
     defaultAccount: string | null;
@@ -32,37 +32,45 @@ export default function ConnectWallet(props: ConnectWalletProps) {
         await window.ethereum.request({ method: 'eth_requestAccounts' })
         .then((accounts: any[]) => {
             props.handleAccountChanged(accounts[0]);
-            props.switchWalletNetwork(props.network);
-            props.updateEthers();
-            alert('Wallet Connected')
+            
+            return props.switchWalletNetwork(props.network);
+        })
+        // .then(() => {
+        //     return props.updateEthers();
+        // })
+        .then(() => {
+            alert('Wallet Connected');
+        })
+        .catch((err:any) => {
+            console.log(err);
         })
         setConnect(true);
     }
 
-    // async function checkIfWalletIsConnected() {
-    //     if (window.ethereum) {
-    //         const accounts = await window.ethereum.request({
-    //             method: "eth_accounts",
-    //         });
+    async function checkIfWalletIsConnected() {
+        if (window.ethereum && isMobile()) {
+            const account = await window.ethereum.request({
+                method: "eth_accounts",
+            });
 
-    //         if (accounts.length > 0) {
-    //             props.handleAccountChanged(accounts[0]);
-    //             setConnect(true);
-    //             return;
-    //         }
+            if (account) {
+                props.handleAccountChanged(account);
+                setConnect(true);
+                return;
+            }
 
-    //         if (isMobile()) {
-    //             await connectWallet();
-    //         }
-    //     }
-    // }
+            if (isMobile()) {
+                await connectWallet();
+            }
+        }
+    }
 
-    // useEffect(() => {
-    //     checkIfWalletIsConnected();
-    // }, []);
+    useEffect(() => {
+        checkIfWalletIsConnected();
+    }, []);
 
 
-    return isMobile() ?
+    return isMobile() && !window.ethereum?
         (
             <div>
                 <button type="button" className="bg-[url('/src/assets/img/collectWallet.png')]" disabled={connect}>
@@ -75,7 +83,7 @@ export default function ConnectWallet(props: ConnectWalletProps) {
         (
             <div>
                 <button type="button" onClick={connectWallet} disabled={connect}>
-                    <img src={connecttWalletButton} alt="collectWallet" />
+                    <img src={connectWalletButton} alt="collectWallet" />
                 </button>
             </div>
         );
