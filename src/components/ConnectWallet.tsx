@@ -35,9 +35,9 @@ export default function ConnectWallet(props: ConnectWalletProps) {
             
             return props.switchWalletNetwork(props.network);
         })
-        // .then(() => {
-        //     return props.updateEthers();
-        // })
+        .then(() => {
+            return props.updateEthers();
+        })
         .then(() => {
             alert('Wallet Connected');
         })

@@ -83,21 +83,22 @@ function BindAccount(props: BindAccountProps) {
   }
 
   const bindAccount = async () => {
-    var tempTokenIds: TokensInfo[] = []
+    var tempTokens: TokensInfo[] = []
     await getTokenIdsApi(getTokenIdsTestData)
     .then(res => {
         if (res.data.op_code == 1) {
             console.log('成功取得TokenIDs');
-            tempTokenIds = res.data.results;
-            props.setTokens(tempTokenIds);
+            tempTokens = res.data.results;
         } else {
             console.log('Token已過期，請重新進入綁定頁面');
         }
-      return props.getBalanceOf(tempTokenIds);
+      return props.getBalanceOf(tempTokens);
     })
-    .then(() => {
-      if (tempTokenIds.length > 0) {
+    .then((updateTokens) => {
+      console.log('updatetoken', updateTokens);
+      if (updateTokens.length > 0) {
         bindAccountApi(bindAccountTestData);
+        props.setTokens(updateTokens);
       }
       setBind(true);
     })

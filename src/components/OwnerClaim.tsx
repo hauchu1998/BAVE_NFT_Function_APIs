@@ -10,9 +10,8 @@ interface OwnerClaimProps {
 }
 
 function OwnerClaim(props: OwnerClaimProps) {
-    const [canClaim, setCanClaim] = useState<number>(0);
-    const [totalClaim, setTotalClaim] = useState<number>(0);
-    const [tokensNotClaim, setTokenNotClaim] = useState<TokensInfo[]>([]);
+    // const [canClaim, setCanClaim] = useState<number>(0);
+    // const [totalClaim, setTotalClaim] = useState<number>(0);
     const [tokenSelection, setTokenSelection] = useState<number[]>([])
 
     const selectToken = (tokenId: number) => {
@@ -20,19 +19,14 @@ function OwnerClaim(props: OwnerClaimProps) {
         if (tokenSelection.indexOf(tokenId) != -1) {
             tempTokenSelection = tokenSelection.filter((token: number) => token != tokenId);
         } else {
-            console.log('not in');
             tempTokenSelection = [...tokenSelection, tokenId];
         }
-        console.log(tempTokenSelection);
         setTokenSelection(tempTokenSelection);
     }
 
     const ownerClaimAll = async () => {
         if (props.claimContract != null) {
-            const tokens = tokensNotClaim.map((token) => {
-                return token.tokenId;
-            })
-            await props.claimContract.nftOwnerClaim([14, 15])
+            await props.claimContract.nftOwnerClaim([14, 15]) //tokenSelection
                 .then((res: any) => {
                     console.log(res);
                 })
@@ -44,16 +38,6 @@ function OwnerClaim(props: OwnerClaimProps) {
         }
 
     }
-
-    useEffect(() => {
-        const tokensNotClaim = props.tokens.filter((token: TokensInfo) => !token.claimed)
-        if (props.claimValue != undefined) {
-            setCanClaim(props.claimValue * tokensNotClaim.length);
-            setTotalClaim(props.claimValue * props.tokens.length);
-            setTokenNotClaim(tokensNotClaim);
-        }
-        setTotalClaim
-    }, [props.tokens])
 
     return (
         <div>
@@ -76,10 +60,10 @@ function OwnerClaim(props: OwnerClaimProps) {
                         })}
                     </ul>
                 </div> : null}
-            <button type="button" className='mt-5 p-5 bg-gray-400 text-xl rounded-md text-center' onClick={() => ownerClaimAll()} disabled={tokensNotClaim.length == 0}>領取分潤金</button>
-            <p>可提領分潤金額：{totalClaim} ETH.</p>
+            <button type="button" className='mt-5 p-5 bg-gray-400 text-xl rounded-md text-center' onClick={() => ownerClaimAll()} disabled={props.tokens.filter((token: TokensInfo) => !token.claimed).length == 0}>領取分潤金</button>
+            {/* <p>可提領分潤金額：{totalClaim} ETH.</p>
             <p>已提領分潤金額：{totalClaim - canClaim} ETH.</p>
-            <p>未提領分潤金額：{canClaim} ETH.</p>
+            <p>未提領分潤金額：{canClaim} ETH.</p> */}
         </div>
     );
 }

@@ -37,9 +37,10 @@ export default defineConfig({
     port: 3030,
     proxy: {
       '/api': {
-        target: 'http://139.162.104.51',
+        // target: 'http://139.162.104.51',
+        target: 'https://dev.lalalatwnft.com',
         changeOrigin: true,
-        // rewrite: (path) => path.replace(/^\/api/, '')
+        rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
   }

@@ -12,5 +12,5 @@ interface ImportMetaEnv {
     readonly VITE_NETWORK: string;
     readonly VITE_DEADLINE: string;
     readonly VITE_PUBLIC_PRICE: number;
-    VITE_SERVER_TOKEN: string;
+    readonly VITE_SERVER_URL: string;
 }

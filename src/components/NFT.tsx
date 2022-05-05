@@ -124,7 +124,7 @@ function NFT() {
 
     }
 
-    const checkClaimed = (tokens:TokensInfo[]) => {
+    const checkClaimed = async (tokens:TokensInfo[]) => {
         return new Promise((resolve, reject) => {
             for (let i = 0; i < tokens.length; i++) {
                 if (claimContract != null) {
@@ -152,11 +152,9 @@ function NFT() {
                 //     tokenId = res.toNumber()
                 // })
             // }
-            checkClaimed(tempTokens)
-            .then((tokens: any) => {
-                console.log(tokens);
-                updateTokens = tokens;
-                setTokens(tokens);
+            await checkClaimed(tempTokens)
+            .then((tempTokens: any) => {
+                updateTokens = tempTokens;
             })
             .catch(err => {
                 console.log(err);
@@ -164,6 +162,7 @@ function NFT() {
         } else {
             alert("please connect wallet");
         }
+        return updateTokens;
     }
 
     return (
