@@ -5,6 +5,7 @@ import axios, { AxiosResponse } from "axios";
 export const getServerTokenApi = async () => {
     axios.get('/api/api/get_token')
     .then((res) => {
+        console.log(res);
         localStorage.setItem('auth_token', res.data.token);
     })
     .catch((err) => console.log(err))

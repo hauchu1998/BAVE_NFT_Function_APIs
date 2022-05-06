@@ -13,4 +13,9 @@ interface ImportMetaEnv {
     readonly VITE_DEADLINE: string;
     readonly VITE_PUBLIC_PRICE: number;
     readonly VITE_SERVER_URL: string;
+    readonly VITE_BUILD_PATH?: string;
+}
+
+interface ImportMeta {
+    readonly env: ImportMetaEnv
 }
