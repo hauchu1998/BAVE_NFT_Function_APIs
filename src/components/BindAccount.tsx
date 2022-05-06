@@ -21,8 +21,8 @@ var getTokenIdsTestData = {
 }
 
   var bindAccountTestData = {
-    "address": "0x006df87a485f4794c0299408588a67d56358ce46",
-    "email": "hello@gmail.com"
+    "address": "0xf16e9b0d03470827a95cdfd0cb8a8a3b46969b90",
+    "email": "aaaaaaaaaaaaaaaaa@gmail.com"
   }
 
 function BindAccount(props: BindAccountProps) {
