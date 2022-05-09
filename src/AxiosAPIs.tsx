@@ -3,7 +3,7 @@ import axios, { AxiosResponse } from "axios";
 
 
 export const getServerTokenApi = async () => {
-    axios.get('/api/get_token')
+    axios.get('https://apidev.lalalatwnft.com/api/get_token')
     .then((res) => {
         console.log(res);
         localStorage.setItem('auth_token', res.data.token);
@@ -31,7 +31,7 @@ interface ResponseData {
 }
 
 export const AuthTestApi = async (data: any) => {
-    await axios.post('/api/auth_test', data, {
+    await axios.post('https://apidev.lalalatwnft.com/api/auth_test', data, {
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
         }
@@ -41,7 +41,7 @@ export const AuthTestApi = async (data: any) => {
 }
 
 export const bindAccountApi = async (bindAccountData: ApiData) => {
-    await axios.post('/api/bind_account', bindAccountData, {
+    await axios.post('https://apidev.lalalatwnft.com/api/bind_account', bindAccountData, {
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
         }
@@ -49,7 +49,7 @@ export const bindAccountApi = async (bindAccountData: ApiData) => {
 }
 
 export const getTokenIdsApi = async (getTokenIdsData: ApiData) => {
-    return await axios.post('/api/get_tokenids', getTokenIdsData, {
+    return await axios.post('https://apidev.lalalatwnft.com/api/get_tokenids', getTokenIdsData, {
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
         }
@@ -57,7 +57,7 @@ export const getTokenIdsApi = async (getTokenIdsData: ApiData) => {
 }
 
 export const getCouponsApi = async (getCouponsData: ApiData) => {
-    return await axios.post('/api/get_coupons', getCouponsData, {
+    return await axios.post('https://apidev.lalalatwnft.com/api/get_coupons', getCouponsData, {
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
         }

@@ -38,17 +38,17 @@ export default defineConfig(({ mode }) => {
         },
       }),
       ],
-      server: {
-        port: 3030,
-        proxy: {
-          '/api': {
-            target: env.VITE_SERVER_URL,
-            changeOrigin: true,
-            ws:false,
-            // rewrite: (path) => path.replace(/^\/api/, '')
-          }
-        }
-      }
+      // server: {
+      //   port: 3030,
+      //   proxy: {
+      //     '/api': {
+      //       target: env.VITE_SERVER_URL,
+      //       changeOrigin: true,
+      //       ws:false,
+      //       // rewrite: (path) => path.replace(/^\/api/, '')
+      //     }
+      //   }
+      // }
     }
   );
 })
