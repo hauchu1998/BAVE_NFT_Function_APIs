@@ -42,10 +42,10 @@ export default defineConfig(({ mode }) => {
         port: 3030,
         proxy: {
           '/api': {
-            // target: 'http://172.105.200.152',
             target: env.VITE_SERVER_URL,
             changeOrigin: true,
-            rewrite: (path) => path.replace(/^\/api/, '')
+            ws:false,
+            // rewrite: (path) => path.replace(/^\/api/, '')
           }
         }
       }

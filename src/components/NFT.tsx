@@ -14,6 +14,8 @@ import { getServerTokenApi, TokensInfo } from '../AxiosAPIs';
 
 const envVariables = import.meta.env;
 
+// console.log('http://localhost:3030/api/api/get_token'.replace(/^\/api/, ''))
+
 const networkTable = {
     "0x1": "Ethereum Main Network (Mainnet)",
     "0x3": "Ropsten Test Network",

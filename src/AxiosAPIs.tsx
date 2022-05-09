@@ -31,7 +31,7 @@ interface ResponseData {
 }
 
 export const AuthTestApi = async (data: any) => {
-    await axios.post('/api/api/auth_test', data, {
+    await axios.post('/api/auth_test', data, {
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
         }
@@ -41,7 +41,7 @@ export const AuthTestApi = async (data: any) => {
 }
 
 export const bindAccountApi = async (bindAccountData: ApiData) => {
-    await axios.post('/api/api/bind_account', bindAccountData, {
+    await axios.post('/api/bind_account', bindAccountData, {
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
         }
@@ -49,7 +49,7 @@ export const bindAccountApi = async (bindAccountData: ApiData) => {
 }
 
 export const getTokenIdsApi = async (getTokenIdsData: ApiData) => {
-    return await axios.post('/api/api/get_tokenids', getTokenIdsData, {
+    return await axios.post('/api/get_tokenids', getTokenIdsData, {
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
         }
@@ -57,7 +57,7 @@ export const getTokenIdsApi = async (getTokenIdsData: ApiData) => {
 }
 
 export const getCouponsApi = async (getCouponsData: ApiData) => {
-    return await axios.post('/api/api/get_coupons', getCouponsData, {
+    return await axios.post('/api/get_coupons', getCouponsData, {
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
         }
