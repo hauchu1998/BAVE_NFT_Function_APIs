@@ -2,8 +2,7 @@ import axios, { AxiosResponse } from "axios";
 
 axios.defaults.baseURL = 'https://apidev.lalalatwnft.com';
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-axios.defaults.withCredentials = true
-axios.defaults.headers.common['Access-Control-Allow-Header'] = '*';
+axios.defaults.headers.common['Access-Control-Allow-Header'] = true;
 
 export const getServerTokenApi = async () => {
     axios.get('/api/get_token')
