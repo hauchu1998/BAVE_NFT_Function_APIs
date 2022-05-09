@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from "axios";
 
-axios.defaults.baseURL = 'https://apidev.lalalatwnft.com';
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+// axios.defaults.baseURL = 'https://apidev.lalalatwnft.com';
+// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+// axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 
 export const getServerTokenApi = async () => {
     axios.get('/api/get_token')
